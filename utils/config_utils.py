@@ -3,8 +3,8 @@ import os
 
 
 
-def load_cfg():
-    config_dir = r'C:\Program Files\SteamManager'
+def load_cfg(user_id):
+    config_dir = rf'C:\Users\{user_id}\AppData\Local\SteamHelper'
     settings_path = os.path.join(config_dir, r"settings.json")
     default_data = {"path": "C:\\"}
 

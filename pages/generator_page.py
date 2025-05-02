@@ -14,13 +14,13 @@ ws = WindowSetting()
 cg = ConfigGenerator()
 
 class GeneratorView:
-    def __init__(self, page):
+    def __init__(self, page, user_id):
         self.page = page
         self.cl = ColorSetting()
-        self.appbar = ButtomAppBar(page)
+        self.appbar = ButtomAppBar(page, user_id)
 
-        self.path = self.appbar.settings_load()['path'] + r'\logpass.txt'
-        self.path_with_email = self.appbar.settings_load()['path'] + r'\logpass_with_email.txt'
+        self.path = self.appbar.settings_load(user_id)['path'] + r'\logpass.txt'
+        self.path_with_email = self.appbar.settings_load(user_id)['path'] + r'\logpass_with_email.txt'
 
         self.generate = ft.ElevatedButton(text='Generate', disabled=True,
                                           tooltip='Enter login',
