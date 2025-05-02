@@ -2,22 +2,18 @@ import flet as ft
 import getpass
 import os
 from pages import *
-from pages.sda_page import SdaView
 from settings import *
-from utils.config_utils import load_cfg
-
+from utils import *
+import threading
 
 
 cl = ColorSetting()
 ws = WindowSetting()
-
+sg = SteamGuard()
 
 class PanelPage:
-    def __init__(self, ):
-        self.page = ft.Page
-
     def main(self, page):
-
+        sg.load_secret_keys()
         user_id = getpass.getuser()
         load_cfg(user_id)
         icon_path = os.path.abspath('assets/icons/icon.ico')
@@ -47,7 +43,7 @@ class PanelPage:
 
         page.bottom_appbar = self.bottom_bar.bottom_appbar
 
-        # Главный контейнер для страниц
+        """MAIN CONTAINER"""
         self.main_container = ft.Column(expand=True, controls=[
             ft.Column(expand=1, controls=[self.top_bar.top_appbar]),
             ft.Column(expand=3, controls=[self.sda.sda_page])
@@ -55,17 +51,21 @@ class PanelPage:
 
         page.add(self.main_container)
 
+
         def close_app(e):
             page.window.close()
+
+
+
 
     def show_generator(self):
         """SHOW PAGE GENERATOR"""
         self.main_container.controls[1].controls = [self.generator.generator_page]
+
         self.main_container.update()
 
     def show_sda(self):
         """SHOW PAGE SDA"""
-
         self.main_container.controls[1].controls = [self.sda.sda_page]
         self.main_container.update()
 

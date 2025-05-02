@@ -15,6 +15,7 @@ cg = ConfigGenerator()
 
 class GeneratorView:
     def __init__(self, page, user_id):
+        self.data_dir = rf'C:\SteamHelper'
         self.page = page
         self.cl = ColorSetting()
         self.appbar = BottomAppBar(page, user_id, on_go_generator=None, on_go_sda=None)
@@ -25,18 +26,18 @@ class GeneratorView:
         self.generate = ft.ElevatedButton(text='Generate', disabled=True,
                                           tooltip='Enter login',
                                           color=cl.secFontColor,
-                                          bgcolor=cl.buttonColor,
+                                          bgcolor=cl.appBarColor,
                                           width=300, height=40,
                                           on_click=lambda e: self.generate_info(e))
         self.name = ft.TextField(value='', hint_text="Enter your login",
                                  color=cl.secFontColor,
-                                 bgcolor=cl.buttonColor,
+                                 bgcolor=cl.appBarColor,
                                  border_radius=18,
-                                 border_color=cl.secBgColor, text_size=25,
+                                 border_color=cl.appBarColor, text_size=25,
                                  text_align=ft.TextAlign.CENTER,
                                  on_change=lambda e: self.check_textfield_login(e))
         self.slider_counter = ft.Slider(min=0, max=100, divisions=20, width=300,
-                                        active_color=cl.secFontColor, thumb_color=cl.buttonColor,
+                                        active_color=cl.secFontColor, thumb_color=cl.appBarColor,
                                         label="{value}", value=10,
                                         on_change=lambda e: self.change_value(e))
         self.result_text = ft.Text(f'account value: {int(self.slider_counter.value)}', size=20, color=cl.secFontColor,
@@ -55,10 +56,10 @@ class GeneratorView:
                         ft.Row(controls=[self.name], alignment=MainAxisAlignment.CENTER),
                         ft.Row(controls=[self.generate], alignment=MainAxisAlignment.CENTER),
                         ft.Row(controls=[
-                            ft.ElevatedButton(text='Open', bgcolor=cl.buttonColor, color=cl.secFontColor, width=145,
+                            ft.ElevatedButton(text='Open', bgcolor=cl.appBarColor, color=cl.secFontColor, width=145,
                                               height=40,
                                               on_click=lambda e: self.open_txt_files(e)),
-                            ft.ElevatedButton(text='Clear', bgcolor=cl.buttonColor, color=cl.secFontColor,
+                            ft.ElevatedButton(text='Clear', bgcolor=cl.appBarColor, color=cl.secFontColor,
                                               width=145,
                                               height=40,
                                               on_click=lambda e: self.clear_txt(e))],
@@ -111,14 +112,13 @@ class GeneratorView:
                 self.generate.disabled = False
         else:
             self.generate.disabled = True
-
         self.page.update()
 
     # OPEN FILES
     def open_txt_files(self, e):
         try:
-            os.startfile(self.path)
-            os.startfile(self.path_with_email)
+            os.startfile(self.data_dir)
+
         except Exception as ex:
             self.result_text.value = "Fail not created."
             self.page.update()

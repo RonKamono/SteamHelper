@@ -6,8 +6,8 @@ class WindowSetting:
 class ColorSetting:
     defBgColor = "#1A1A1D"
     defFontColor = "#F5F4F8"
-    buttonColor = "#240090"
-    secBgColor = "#3500D3"
+    appBarColor = "#5D5C61"
+    secBgColor = "#282828"
     secFontColor = "#E9E5F5"
     appBarColor = "#1E1F22"
     inputBgColor = "#7F6F8A"

@@ -15,12 +15,12 @@ class BottomAppBar:
         self.on_go_generator = on_go_generator  # Функция для перехода в Generator
 
         self.path_textfield = ft.TextField(
-            label='Path to save files',
+            label='Path to files',
             width=250,
             height=50,
             border_radius=18,
             value=self.settings_load(user_id)['path'],
-            bgcolor=cl.buttonColor,
+            bgcolor=cl.appBarColor,
             color=cl.secFontColor,
             border_color=cl.secBgColor,
             label_style=ft.TextStyle(color=cl.secFontColor)
@@ -39,7 +39,7 @@ class BottomAppBar:
                         text='Confirm',
                         width=250,
                         height=40,
-                        bgcolor=cl.secBgColor,
+                        bgcolor=cl.appBarColor,
                         color=cl.secFontColor,
                         on_click=lambda e: self.save_setting(e)
                     ),
