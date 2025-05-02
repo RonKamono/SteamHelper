@@ -1,23 +1,23 @@
-from .buttom_appbar import ButtomAppBar
+
+from .bottom_appbar import BottomAppBar
 import flet as ft
-from flet.core.types import MainAxisAlignment, CrossAxisAlignment
+from flet.core.types import MainAxisAlignment
 from random import choices
 import re
 import os
 import time
 from settings import *
 
-
-
 cl = ColorSetting()
 ws = WindowSetting()
 cg = ConfigGenerator()
+
 
 class GeneratorView:
     def __init__(self, page, user_id):
         self.page = page
         self.cl = ColorSetting()
-        self.appbar = ButtomAppBar(page, user_id)
+        self.appbar = BottomAppBar(page, user_id, on_go_generator=None, on_go_sda=None)
 
         self.path = self.appbar.settings_load(user_id)['path'] + r'\logpass.txt'
         self.path_with_email = self.appbar.settings_load(user_id)['path'] + r'\logpass_with_email.txt'
@@ -47,17 +47,19 @@ class GeneratorView:
                 ft.Column(
                     expand=True,
                     controls=[
-                        ft.Row(controls=[ft.Icon(name=ft.Icons.VERIFIED_USER_OUTLINED, size=30, color=cl.secFontColor),
-                                         ft.Text(value='GENERATE INFO', font_family='Cuprum', size=30,
-                                                 color=cl.secFontColor,
-                                                 weight=ft.FontWeight.W_600)], alignment=MainAxisAlignment.CENTER),
+                        ft.Row(
+                            controls=[ft.Icon(name=ft.Icons.VERIFIED_USER_OUTLINED, size=30, color=cl.secFontColor),
+                                      ft.Text(value='GENERATE INFO', font_family='Cuprum', size=30,
+                                              color=cl.secFontColor,
+                                              weight=ft.FontWeight.W_600)], alignment=MainAxisAlignment.CENTER),
                         ft.Row(controls=[self.name], alignment=MainAxisAlignment.CENTER),
                         ft.Row(controls=[self.generate], alignment=MainAxisAlignment.CENTER),
                         ft.Row(controls=[
                             ft.ElevatedButton(text='Open', bgcolor=cl.buttonColor, color=cl.secFontColor, width=145,
                                               height=40,
                                               on_click=lambda e: self.open_txt_files(e)),
-                            ft.ElevatedButton(text='Clear', bgcolor=cl.buttonColor, color=cl.secFontColor, width=145,
+                            ft.ElevatedButton(text='Clear', bgcolor=cl.buttonColor, color=cl.secFontColor,
+                                              width=145,
                                               height=40,
                                               on_click=lambda e: self.clear_txt(e))],
                             alignment=MainAxisAlignment.CENTER),
@@ -111,18 +113,18 @@ class GeneratorView:
             self.generate.disabled = True
 
         self.page.update()
+
     # OPEN FILES
     def open_txt_files(self, e):
         try:
             os.startfile(self.path)
             os.startfile(self.path_with_email)
-        except:
+        except Exception as ex:
             self.result_text.value = "Fail not created."
             self.page.update()
             time.sleep(2)
             self.result_text.value = f'account value: {int(self.slider_counter.value)}'
             self.page.update()
-
     def clear_txt(self, e):
         try:
             os.remove(self.path)
