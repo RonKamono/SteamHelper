@@ -19,7 +19,7 @@ class PanelPage:
         page.window.resizable = False
         page.window.full_screen = False
         page.window.maximizable = False
-        # page.window.center()
+        page.window.center()
 
         generator = GeneratorView(page)
         abar = ButtomAppBar(page)
