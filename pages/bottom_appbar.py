@@ -85,6 +85,7 @@ class BottomAppBar:
         with open(rf'C:\Users\{self.user_id}\AppData\Local\SteamHelper\settings.json', 'w', encoding='utf-8') as json_file:
             json.dump(settings, json_file, ensure_ascii=False, indent=4)
         self.page.close(self.settings_alert)
+        self.settings_load(user_id=self.user_id)
 
     def open_setting(self, e):
         self.page.open(self.settings_alert)

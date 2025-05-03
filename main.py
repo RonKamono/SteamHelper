@@ -4,8 +4,6 @@ import os
 from pages import *
 from settings import *
 from utils import *
-import threading
-
 
 cl = ColorSetting()
 ws = WindowSetting()
@@ -13,18 +11,18 @@ sg = SteamGuard()
 
 class PanelPage:
     def main(self, page):
-        sg.load_secret_keys()
         user_id = getpass.getuser()
         load_cfg(user_id)
-        icon_path = os.path.abspath('assets/icons/icon.ico')
+        sg.load_secret_keys()
+        icon_path = os.path.abspath('D:/SteamManager/assets/icons/icon.ico')
         page.window.icon = icon_path
-        page.title = "SteamHelper"
+        page.title = 'Steam Helper'
         page.bgcolor = cl.defBgColor
         page.window.width = ws.defaultWidth
         page.window.height = ws.defaultHeight
         page.window.resizable = False
         page.window.full_screen = False
-        # page.window.center()
+        page.window.center()
         page.padding = 0
         page.window.frameless = True
 
@@ -38,7 +36,7 @@ class PanelPage:
         )
         self.top_bar = TopAppBar(
             page,
-            close_app =lambda e: close_app(e)
+            close_app = lambda e: close_app(e)
         )
 
         page.bottom_appbar = self.bottom_bar.bottom_appbar
@@ -51,12 +49,8 @@ class PanelPage:
 
         page.add(self.main_container)
 
-
         def close_app(e):
             page.window.close()
-
-
-
 
     def show_generator(self):
         """SHOW PAGE GENERATOR"""

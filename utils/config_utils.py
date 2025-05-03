@@ -3,13 +3,12 @@ import os
 
 def load_cfg(user_id):
     config_dir = rf'C:\Users\{user_id}\AppData\Local\SteamHelper'
-    data_dir = rf'C:\SteamHelper'
     settings_path = os.path.join(config_dir, r"settings.json")
     default_data = {"path": "C:\\SteamHelper"}
-
+    data_dir = rf'C:\SteamHelper'
     os.makedirs(config_dir, exist_ok=True)
     os.makedirs(data_dir, exist_ok=True)
-    os.makedirs(fr'{data_dir}\mafiles', exist_ok=True)
+    os.makedirs(f'{data_dir}\mafiles', exist_ok=True)
 
     if not os.path.exists(settings_path):
         try:

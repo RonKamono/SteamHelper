@@ -28,7 +28,7 @@ class GeneratorView:
                                           color=cl.secFontColor,
                                           bgcolor=cl.appBarColor,
                                           width=300, height=40,
-                                          on_click=lambda e: self.generate_info(e))
+                                          on_click=lambda e: self.generate_info(e, user_id))
         self.name = ft.TextField(value='', hint_text="Enter your login",
                                  color=cl.secFontColor,
                                  bgcolor=cl.appBarColor,
@@ -81,7 +81,10 @@ class GeneratorView:
         self.page.update()
 
     # FUNC GENERATION AND WRITE INFO
-    def generate_info(self, e):
+    def generate_info(self, e, user_id):
+        self.path = self.appbar.settings_load(user_id)['path'] + r'\logpass.txt'
+        self.path_with_email = self.appbar.settings_load(user_id)['path'] + r'\logpass_with_email.txt'
+
         self.result_text.value = "User info created."
         for i in range(int(self.slider_counter.value)):
             # GENERATE INFO ACCOUNT

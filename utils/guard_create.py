@@ -1,6 +1,5 @@
 import hmac, base64, hashlib
-from re import search
-
+from pages import *
 import ntplib
 import time
 import json, os
@@ -50,7 +49,6 @@ class SteamGuard:
             current_time = int(time.time())
             seconds_since_epoch = current_time % 30
             self.timer = 30 - seconds_since_epoch
-
             return self.code
 
 
