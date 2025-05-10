@@ -4,6 +4,8 @@ You can use Steam Helper for simple generate Steam Guard Code\
 Storage Steam accounts and open his\
 Generate Account Data -> Login:Password and Login | Password | Email | index
 
+![img.png](git_image/img.png)
+
 Future plan
 1. Steam Web open
 2. Port SDA
