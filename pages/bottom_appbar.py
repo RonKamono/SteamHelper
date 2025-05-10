@@ -2,15 +2,14 @@ import flet as ft
 from flet.core.types import MainAxisAlignment, CrossAxisAlignment
 import json
 from settings import *
-
+from utils.config_utils import settings_load
 cl = ColorSetting()
 ws = WindowSetting()
 cg = ConfigGenerator()
 
 class BottomAppBar:
-    def __init__(self, page, user_id, on_go_sda, on_go_generator):
+    def __init__(self, page, on_go_sda, on_go_generator):
         self.page = page
-        self.user_id = user_id
         self.on_go_sda = on_go_sda  # Функция для перехода в SDA
         self.on_go_generator = on_go_generator  # Функция для перехода в Generator
 
@@ -19,7 +18,19 @@ class BottomAppBar:
             width=250,
             height=50,
             border_radius=18,
-            value=self.settings_load(user_id)['path'],
+            value=settings_load()['path'],
+            bgcolor=cl.appBarColor,
+            color=cl.secFontColor,
+            border_color=cl.secBgColor,
+            label_style=ft.TextStyle(color=cl.secFontColor)
+        )
+
+        self.steam_textfield = ft.TextField(
+            label='Steam folder',
+            width=250,
+            height=50,
+            border_radius=18,
+            value=settings_load()['steam_path'],
             bgcolor=cl.appBarColor,
             color=cl.secFontColor,
             border_color=cl.secBgColor,
@@ -30,11 +41,12 @@ class BottomAppBar:
             alignment=ft.alignment.center,
             title_padding=ft.padding.all(25),
             content=ft.Column(
-                height=140,
+                height=220,
                 width=250,
                 controls=[
                     ft.Text(value='SETTINGS', size=30, weight=ft.FontWeight.W_600, color=cl.secFontColor),
                     self.path_textfield,
+                    self.steam_textfield,
                     ft.ElevatedButton(
                         text='Confirm',
                         width=250,
@@ -78,19 +90,17 @@ class BottomAppBar:
             ),
         )
 
-    def save_setting(self, e):
-        settings = {
-            "path": self.path_textfield.value,
-        }
-        with open(rf'C:\Users\{self.user_id}\AppData\Local\SteamHelper\settings.json', 'w', encoding='utf-8') as json_file:
-            json.dump(settings, json_file, ensure_ascii=False, indent=4)
-        self.page.close(self.settings_alert)
-        self.settings_load(user_id=self.user_id)
-
     def open_setting(self, e):
         self.page.open(self.settings_alert)
 
-    def settings_load(self, user_id):
-        with open(rf'C:\Users\{user_id}\AppData\Local\SteamHelper\settings.json', 'r', encoding='utf-8') as json_file:
-            settings_load = json.load(json_file)
-        return settings_load
+
+    def save_setting(self, e):
+        settings = {
+            "path": self.path_textfield.value,
+            "steam_path": self.steam_textfield.value
+        }
+        with open(rf'C:\Program Files\SteamHelper\settings.json', 'w', encoding='utf-8') as json_file:
+            json.dump(settings, json_file, ensure_ascii=False, indent=4)
+        self.page.close(self.settings_alert)
+        settings_load()
+

@@ -4,16 +4,13 @@ import os
 from pages import *
 from settings import *
 from utils import *
-
+from flet import MainAxisAlignment, CrossAxisAlignment
 cl = ColorSetting()
 ws = WindowSetting()
 sg = SteamGuard()
 
 class PanelPage:
     def main(self, page):
-        user_id = getpass.getuser()
-        load_cfg(user_id)
-        sg.load_secret_keys()
         icon_path = os.path.abspath('D:/SteamManager/assets/icons/icon.ico')
         page.window.icon = icon_path
         page.title = 'Steam Helper'
@@ -26,11 +23,10 @@ class PanelPage:
         page.padding = 0
         page.window.frameless = True
 
-        self.generator = GeneratorView(page, user_id)
-        self.sda = SdaView(page, user_id)
+        self.generator = GeneratorView(page)
+        self.sda = SdaView(page)
         self.bottom_bar = BottomAppBar(
             page,
-            user_id,
             on_go_sda=lambda e: self.show_sda(),
             on_go_generator=lambda e: self.show_generator()
         )
@@ -42,9 +38,16 @@ class PanelPage:
         page.bottom_appbar = self.bottom_bar.bottom_appbar
 
         """MAIN CONTAINER"""
-        self.main_container = ft.Column(expand=True, controls=[
-            ft.Column(expand=1, controls=[self.top_bar.top_appbar]),
-            ft.Column(expand=3, controls=[self.sda.sda_page])
+        self.main_container = ft.Column(expand=True,
+                                        alignment=MainAxisAlignment.CENTER,
+                                        horizontal_alignment=CrossAxisAlignment.CENTER,
+                                        controls=[
+            ft.Column(controls=[self.top_bar.top_appbar]),
+            ft.Column(expand=3,
+                      alignment=MainAxisAlignment.CENTER,
+                      horizontal_alignment=CrossAxisAlignment.CENTER,
+                      controls=[self.sda.sda_page]),
+
         ])
 
         page.add(self.main_container)
@@ -63,6 +66,8 @@ class PanelPage:
         self.main_container.controls[1].controls = [self.sda.sda_page]
         self.main_container.update()
 
-
 panel_page_instance = PanelPage()
+load_cfg()
+settings_load()
+sg.load_secret_keys()
 ft.app(panel_page_instance.main)

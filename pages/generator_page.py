@@ -7,28 +7,27 @@ import re
 import os
 import time
 from settings import *
-
+from utils.config_utils import settings_load
 cl = ColorSetting()
 ws = WindowSetting()
 cg = ConfigGenerator()
 
 
 class GeneratorView:
-    def __init__(self, page, user_id):
+    def __init__(self, page):
         self.data_dir = rf'C:\SteamHelper'
         self.page = page
         self.cl = ColorSetting()
-        self.appbar = BottomAppBar(page, user_id, on_go_generator=None, on_go_sda=None)
-
-        self.path = self.appbar.settings_load(user_id)['path'] + r'\logpass.txt'
-        self.path_with_email = self.appbar.settings_load(user_id)['path'] + r'\logpass_with_email.txt'
+        self.appbar = BottomAppBar(page, on_go_generator=None, on_go_sda=None)
+        self.path = settings_load()['path'] + r'\logpass.txt'
+        self.path_with_email = settings_load()['path'] + r'\logpass_with_email.txt'
 
         self.generate = ft.ElevatedButton(text='Generate', disabled=True,
                                           tooltip='Enter login',
                                           color=cl.secFontColor,
                                           bgcolor=cl.appBarColor,
                                           width=300, height=40,
-                                          on_click=lambda e: self.generate_info(e, user_id))
+                                          on_click=lambda e: self.generate_info(e))
         self.name = ft.TextField(value='', hint_text="Enter your login",
                                  color=cl.secFontColor,
                                  bgcolor=cl.appBarColor,
@@ -81,9 +80,9 @@ class GeneratorView:
         self.page.update()
 
     # FUNC GENERATION AND WRITE INFO
-    def generate_info(self, e, user_id):
-        self.path = self.appbar.settings_load(user_id)['path'] + r'\logpass.txt'
-        self.path_with_email = self.appbar.settings_load(user_id)['path'] + r'\logpass_with_email.txt'
+    def generate_info(self, e):
+        self.path = settings_load()['path'] + r'\logpass.txt'
+        self.path_with_email = settings_load()['path'] + r'\logpass_with_email.txt'
 
         self.result_text.value = "User info created."
         for i in range(int(self.slider_counter.value)):

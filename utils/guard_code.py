@@ -51,8 +51,6 @@ class SteamGuard:
             self.timer = 30 - seconds_since_epoch
             return self.code
 
-
-
         except Exception as e:
             print(f"Fail generate guard: {e}")
             return "00000"
