@@ -21,6 +21,9 @@
     <option name="FILTER_BY_ACTION_IN_POPUP" value="false" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -39,6 +42,7 @@
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.sda_page.executor&quot;: &quot;Run&quot;,
     &quot;Python.setup.executor&quot;: &quot;Run&quot;,
+    &quot;Python.watchdog_change_files.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/SteamManager&quot;,
@@ -50,11 +54,11 @@
       <recent name="C:\Users\Ron\PycharmProjects\SteamManager\assets" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\SteamManager\git_image" />
       <recent name="C:\Users\Ron\PycharmProjects\SteamManager\assets" />
       <recent name="C:\Users\Ron\PycharmProjects\SteamManager" />
       <recent name="C:\Users\Ron\PycharmProjects\SteamManager\config" />
       <recent name="C:\Users\Ron\PycharmProjects\PasswordManager" />
-      <recent name="C:\Users\Ron\PycharmProjects\PasswordManager\assets\fonts" />
     </key>
   </component>
   <component name="RunManager">

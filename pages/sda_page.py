@@ -6,20 +6,25 @@ from flet import ControlState
 import threading
 from settings import *
 from utils import *
+from .add_account_alert import AddAccountAlert
 import time
 import os
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 cl = ColorSetting()
 sg = SteamGuard()
 
+"""SDA CLASS -> PAINT SDA PAGE AND SDA FUNC"""
 class SdaView:
     def __init__(self, page):
         sg.load_secret_keys()
+        self.ac = AddAccountAlert()
         self.page = page
         self.varibale_login = False
         self.cl = ColorSetting()
         self.appbar = BottomAppBar(page, on_go_generator=None, on_go_sda=None)
-        self.guard = ft.Text(value=sg.secret, selectable=True, size=20)
+        self.guard = ft.Text(value=sg.secret, color=cl.secFontColor,selectable=True, size=20)
         self.timer_text = ft.Text(value="", size=16, color=cl.secFontColor, weight=ft.FontWeight.W_600)
         self.last_login = ''
         self.timer_thread = threading.Thread(target=self.update_timer, daemon=True)
@@ -30,17 +35,6 @@ class SdaView:
                 controls=[], spacing=5
             )
         )
-
-        self.error_alert = ft.AlertDialog(
-        title=ft.Text("Login/Password missing",
-                        size=20,
-                        color=cl.secFontColor,
-                        text_align=ft.TextAlign.CENTER
-                        ),
-            alignment=ft.alignment.center,
-        bgcolor=cl.defBgColor,
-    )
-
         def guard_generate(login, e, acc_index):
             self.logins_acc.content.controls[acc_index].content.style.text_style[ControlState.DEFAULT].size = 25
             self.logins_acc.content.controls[acc_index].content.style.color = cl.defFontColor
@@ -53,7 +47,6 @@ class SdaView:
                     self.logins_acc.content.controls[_].content.style.color = cl.secFontColor
                     self.logins_acc.content.controls[_].content.style.text_style[
                         ControlState.DEFAULT].weight = ft.FontWeight.W_400
-
             sg.generate_steam_code(login)
             self.guard.value = sg.code
             self.page.update()
@@ -79,14 +72,15 @@ class SdaView:
             if __ != "":
                 self.logins_acc.content.controls.append(__)
 
-        # GENERATE GUARD INDEX 0
+        # GENERATE GUARD FOR FIRST ACCOUNT
         try:
-            guard_generate(login=sorted(sg.account_names)[0], acc_index=0, e=None)
             # START TIMER
-            timer_thread = threading.Thread(target=self.update_timer, daemon=True)
-            timer_thread.start()
+            guard_generate(login=sorted(sg.account_names)[0], acc_index=0, e=None)
+            self.timer_thread.start()
+
         except:
-            self.guard.value = 'Add mafiles path in settings'
+            self.guard.value = 'add .mafile -> folder'
+
 
         self.sda_page = ft.Column(
             controls=[
@@ -94,7 +88,7 @@ class SdaView:
                 ft.Column(
                     expand=True,
                     controls=[
-                        # NAME
+                        # TITLE NAME
                         ft.Row(controls=[
                             ft.Text(value='STEAM DESKTOP AUTHENTICATOR', font_family='Cuprum', size=20,
                                     color=cl.secFontColor,
@@ -150,6 +144,7 @@ class SdaView:
                             )
                         ], alignment=MainAxisAlignment.CENTER
                         ),
+                        # BUTTONS AREA
                         ft.Row(controls=[
                             ft.Column(
                                 controls=[
@@ -205,23 +200,39 @@ class SdaView:
         self.page.update()
 
     def update_timer(self):
-            correct_time = sg.timer
-            while True:
-                remaining_time =  max(0, correct_time)
-                self.timer_text.value = f"Timer update: {remaining_time} sec"
-                correct_time -= 1
-                time_on = True
+        correct_time = sg.timer
+        while True:
+            remaining_time =  max(0, correct_time)
+            self.timer_text.value = f"Timer update: {remaining_time} sec"
+            correct_time -= 1
+            time_on = True
+            self.page.update()
+            if remaining_time == 0:
+                sg.generate_steam_code(self.last_login)
+                correct_time = sg.timer
+                self.guard.value = sg.code
                 self.page.update()
-                if remaining_time == 0:
-                    sg.generate_steam_code(self.last_login)
-                    correct_time = sg.timer
-                    self.guard.value = sg.code
-                    self.page.update()
-                    time_on = False
-                if time_on:
-                    time.sleep(1)
+                time_on = False
+            if time_on:
+                time.sleep(1)
+
+    def watch_files(self):
+        path = settings_load()['path'] + '/mafiles'
+        event_handler = self.MyEventHandler(self)
+        observer = Observer()
+        observer.schedule(event_handler, path, recursive=True)
+        observer.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
 
     def add_account(self, e):
+        self.page.open(self.ac.account_alert)
+
+    def refresh_acc_list(self, e):
         self.logins_acc.content.clean()
         sg.account_names.clear()
         sg.load_secret_keys()
@@ -280,12 +291,11 @@ class SdaView:
                 except:
                     pass
             else:
-                self.guard.value = 'add mifile in folder'
+                self.guard.value = 'add .mafile -> folder'
                 self.guard.update()
         except:
             pass
         self.logins_acc.update()
-
 
     def open_folder(self, e):
         os.startfile(settings_load()['path'])
@@ -315,6 +325,21 @@ class SdaView:
         if self.check_valid_account(login):
             password = self.get_password(login)
             guard_code = sg.code
+            print(login, password, guard_code) # -> LOGINING
             self.steam.open_steam_account(login, password, guard_code)
         else:
-            self.page.open(self.error_alert)
+            self.guard.value = 'Add Login:password -> accounts.txt'
+            self.guard.update()
+            time.sleep(2)
+            self.guard.value = sg.code
+            self.guard.update()
+
+    class MyEventHandler(FileSystemEventHandler):
+        def __init__(self, sda_view):
+            self.sda_view = sda_view
+
+        def on_created(self, event):
+            self.sda_view.refresh_acc_list(e=None)
+
+        def on_deleted(self, event):
+            self.sda_view.refresh_acc_list(e=None)

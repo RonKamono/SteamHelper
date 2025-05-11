@@ -21,7 +21,7 @@ class BottomAppBar:
             value=settings_load()['path'],
             bgcolor=cl.appBarColor,
             color=cl.secFontColor,
-            border_color=cl.secBgColor,
+            border_color=cl.defBgColor,
             label_style=ft.TextStyle(color=cl.secFontColor)
         )
 
@@ -33,13 +33,14 @@ class BottomAppBar:
             value=settings_load()['steam_path'],
             bgcolor=cl.appBarColor,
             color=cl.secFontColor,
-            border_color=cl.secBgColor,
+            border_color=cl.defBgColor,
             label_style=ft.TextStyle(color=cl.secFontColor)
         )
 
         self.settings_alert = ft.AlertDialog(
             alignment=ft.alignment.center,
             title_padding=ft.padding.all(25),
+            bgcolor = cl.defBgColor,
             content=ft.Column(
                 height=220,
                 width=250,

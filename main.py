@@ -5,10 +5,10 @@ from pages import *
 from settings import *
 from utils import *
 from flet import MainAxisAlignment, CrossAxisAlignment
+import threading
 cl = ColorSetting()
 ws = WindowSetting()
 sg = SteamGuard()
-
 class PanelPage:
     def main(self, page):
         icon_path = os.path.abspath('D:/SteamManager/assets/icons/icon.ico')
@@ -55,10 +55,13 @@ class PanelPage:
         def close_app(e):
             page.window.close()
 
+        watcher_thread = threading.Thread(target=self.sda.watch_files())
+        watcher_thread.start()
+
+
     def show_generator(self):
         """SHOW PAGE GENERATOR"""
         self.main_container.controls[1].controls = [self.generator.generator_page]
-
         self.main_container.update()
 
     def show_sda(self):
